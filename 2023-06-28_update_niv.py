@@ -47,6 +47,7 @@ print("2021:",len([link for link in links if "2021" in link]))
 print("2022:",len([link for link in links if "2022" in link]))
 print("2023:",len([link for link in links if "2023" in link]))
 print("2024:",len([link for link in links if "2024" in link]))
+print("2025:",len([link for link in links if "2025" in link]))
 
 prefix = 'https://travel.state.gov'
 links = [prefix + link for i,link in enumerate(links) if link.startswith('/content')]
@@ -215,9 +216,23 @@ s3=boto3.Session(
     's3',
     aws_access_key_id=aws_credential['access_key'],
     aws_secret_access_key=aws_credential['secret_key'])
-file_counts=len(s3.list_objects(Bucket = aws_credential['bucket'])['Contents'])
+
+        
+my_prefix = 'messy_data/visa_scraped/niv'
+file_counts=len(s3.list_objects(Bucket = aws_credential['bucket'], Prefix = my_prefix)['Contents'])
 print(f'Before backing up, the bucket currently has {file_counts} objects.')
 
-for index,element in enumerate(new_TEXT):
-    with open(element,"r") as file:
-        s3.put_object(Bucket=aws_credential['bucket'], Key=('messy_data/visa_scraped/niv/' + new_txtnames[index]))
+## added on 2025-04-08, still sick but slowly recovering
+TEXT_BODY = [None] * len(new_TEXT)
+# the outer list of all downloaded files    
+for index, element in enumerate(new_TEXT):
+    # the inner list of pages of a given file
+    TEXT_BODY[index] = "\n".join([page for page in element])
+    s3.put_object(Body = TEXT_BODY[index], Bucket=aws_credential['bucket'], Key=('messy_data/visa_scraped/niv/' + new_txtnames[index]))
+file_counts=len(s3.list_objects(Bucket = aws_credential['bucket'], Prefix = my_prefix)['Contents'])
+print(f'After backing up, the bucket currently has {file_counts} objects.')
+        
+bucket_files=[d['Key'].split('/')[-1] for d in 
+ s3.list_objects(Bucket = aws_credential['bucket'], 
+                 Prefix = my_prefix)['Contents']]
+print("Last few items in the bucket after updates: ",bucket_files[-5:])
