@@ -222,7 +222,7 @@ my_prefix = 'messy_data/visa_scraped/niv'
 file_counts=len(s3.list_objects(Bucket = aws_credential['bucket'], Prefix = my_prefix)['Contents'])
 print(f'Before backing up, the bucket currently has {file_counts} objects.')
 
-<<<<<<< HEAD
+
 ## added on 2025-04-08, still sick but slowly recovering
 TEXT_BODY = [None] * len(new_TEXT)
 # the outer list of all downloaded files    
@@ -237,8 +237,3 @@ bucket_files=[d['Key'].split('/')[-1] for d in
  s3.list_objects(Bucket = aws_credential['bucket'], 
                  Prefix = my_prefix)['Contents']]
 print("Last few items in the bucket after updates: ",bucket_files[-5:])
-=======
-for index,element in enumerate(new_TEXT):
-    with open(element,"r") as file:
-        s3.put_object(Body=element.read(),Bucket=aws_credential['bucket'], Key=('messy_data/visa_scraped/niv/' + new_txtnames[index]))
->>>>>>> fb09c59258df9da0fd629982ce04772106ffc6ee
