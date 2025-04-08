@@ -220,4 +220,4 @@ print(f'Before backing up, the bucket currently has {file_counts} objects.')
 
 for index,element in enumerate(new_TEXT):
     with open(element,"r") as file:
-        s3.put_object(Bucket=aws_credential['bucket'], Key=('messy_data/visa_scraped/niv/' + new_txtnames[index]))
+        s3.put_object(Body=element.read(),Bucket=aws_credential['bucket'], Key=('messy_data/visa_scraped/niv/' + new_txtnames[index]))
